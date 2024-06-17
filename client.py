@@ -12,7 +12,7 @@ join = False
 logger = logging.getLogger("client_log")
 logger.setLevel(logging.DEBUG)
 
-sh = logging.StreamHandler()
+sh = logging.FileHandler("logs/client.log")
 sh.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(asctime)s %(levelname)s [%(name)s]: - %(message)s")
 sh.setFormatter(formatter)
@@ -63,38 +63,38 @@ receiveing_thread = threading.Thread(target=receive, args=("RecvThread", s))
 receiveing_thread.start()
 
 while not shutdown:
-    if not join:
-        s.sendto(f"{username} joined chat. Hello!".encode("utf-8"), server_host)
-        join = True
-    else:
-        message = input()
+    try:
+        if not join:
+            s.sendto(f"{username} joined chat. Hello!".encode("utf-8"), server_host)
+            join = True
+        else:
+            message = input()
 
-        if message.lower() in ["q", "quit"]:
-            shutdown = True
-            sys.exit()
+            if message.lower() in ["q", "quit"]:
+                shutdown = True
+                sys.exit()
 
-        # # Encrypting message
-        # encrypted_message = ""
-        # for sym in message:
-        #     encrypted_message += chr(ord(sym)*key)
-        # message = encrypted_message
+            # # Encrypting message
+            # encrypted_message = ""
+            # for sym in message:
+            #     encrypted_message += chr(ord(sym)*key)
+            # message = encrypted_message
 
-        if message:
-            s.sendto(f"{username}: {message}".encode("utf-8"), server_host)
+            if message:
+                s.sendto(f"{username}: {message}".encode("utf-8"), server_host)
 
-        time.sleep(0.3)
+            time.sleep(0.3)
 
-        try:
-            pass
-        except KeyboardInterrupt:
-            shutdown = True
-            sys.exit()
-        except TimeoutError:
-            pass
-        except Exception as exc:
-            shutdown = True
-            logger.critical(exc)
-            break
+    except KeyboardInterrupt:
+        shutdown = True
+        sys.exit()
+    except TimeoutError:
+        pass
+    except Exception as exc:
+        s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
+        shutdown = True
+        logger.critical(exc)
+        break
 
 receiveing_thread.join()
 sys.exit()

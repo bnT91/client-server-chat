@@ -6,7 +6,7 @@ import time
 logger = logging.getLogger("server_log")
 logger.setLevel(logging.DEBUG)
 
-sh = logging.StreamHandler()
+sh = logging.FileHandler("logs/server.log")
 sh.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(asctime)s %(levelname)s [%(name)s]: - %(message)s")
 sh.setFormatter(formatter)
@@ -23,7 +23,6 @@ s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((host, port))
 s.settimeout(1)
 
-running = True
 logger.info("Server started")
 
 while True:
@@ -33,7 +32,7 @@ while True:
             clients.append(addr)
 
         info = f"{addr[0]}:{addr[1]} | "
-        logger.info(f"{info}{data.decode("utf-8")}")
+        print(f"{info}{data.decode("utf-8")}")
 
         for client in clients:
             if client != addr:
@@ -48,5 +47,6 @@ while True:
     except Exception as exc:
         logger.critical(exc)
         logger.info("Server stopped due to critical error")
-        running = False
+        break
 
+s.close()
