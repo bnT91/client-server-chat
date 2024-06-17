@@ -52,6 +52,8 @@ def receive(name, sock):
             time.sleep(0.3)
         except KeyboardInterrupt:
             break
+        except TimeoutError:
+            pass
         except Exception as exc:
             logger.error(exc)
             break
