@@ -88,6 +88,7 @@ while not shutdown:
 
     except KeyboardInterrupt:
         shutdown = True
+        receiveing_thread.join()
         sys.exit()
     except TimeoutError:
         pass
