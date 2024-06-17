@@ -18,7 +18,7 @@ formatter = logging.Formatter("%(asctime)s %(levelname)s [%(name)s]: - %(message
 sh.setFormatter(formatter)
 logger.addHandler(sh)
 
-host = socket.gethostbyname(socket.gethostname())
+host = "0.0.0.0"
 port = 0
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

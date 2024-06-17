@@ -15,8 +15,6 @@ logger.addHandler(sh)
 host = socket.gethostbyname(socket.gethostname())
 port = 7777
 
-# print(host)
-
 clients = list()
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
