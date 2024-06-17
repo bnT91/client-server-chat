@@ -82,8 +82,7 @@ while not shutdown:
             #     encrypted_message += chr(ord(sym)*key)
             # message = encrypted_message
 
-            if message:
-                s.sendto(f"{username}: {message}".encode("utf-8"), server_host)
+            s.sendto(f"{username}: {message}".encode("utf-8"), server_host)
 
             time.sleep(0.3)
 
