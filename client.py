@@ -55,7 +55,7 @@ def receive(name, sock):
             s.close()
             sys.exit()
         except socket.timeout:
-            print("Hi")
+            pass
         except Exception as exc:
             logger.error(exc)
             break
@@ -91,17 +91,16 @@ while not shutdown:
 
     except KeyboardInterrupt:
         s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
+        print("here")
         shutdown = True
         receiveing_thread.join()
         s.close()
         sys.exit()
     except socket.timeout:
-        print("Hi")
+        pass
     except Exception as exc:
         s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
         shutdown = True
         logger.critical(exc)
-        break
-
-receiveing_thread.join()
-sys.exit()
+        receiveing_thread.join()
+        sys.exit()
