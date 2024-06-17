@@ -7,3 +7,5 @@
 2024-06-17 16:31:17,376 INFO [server_log]: - Server started
 2024-06-17 16:35:19,081 CRITICAL [server_log]: - [WinError 10054] Удаленный хост принудительно разорвал существующее подключение
 2024-06-17 16:35:19,081 INFO [server_log]: - Server stopped due to critical error
+2024-06-17 16:42:23,997 INFO [server_log]: - Server started
+2024-06-17 16:48:22,060 INFO [server_log]: - Server started

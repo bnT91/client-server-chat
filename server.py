@@ -42,7 +42,7 @@ while True:
     except KeyboardInterrupt:
         s.close()
         sys.exit()
-    except TimeoutError:
+    except socket.timeout:
         pass
     except Exception as exc:
         logger.critical(exc)

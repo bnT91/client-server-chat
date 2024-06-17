@@ -24,7 +24,7 @@ port = 0
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((host, port))
 s.setblocking(True)
-s.settimeout(1)
+s.settimeout(0.2)
 
 server_host = ("192.168.1.67", 7777)
 
@@ -49,12 +49,13 @@ def receive(name, sock):
 
             print(data.decode("utf-8"))
 
-            time.sleep(0.3)
+            time.sleep(0.2)
         except KeyboardInterrupt:
             receiveing_thread.join()
+            s.close()
             sys.exit()
-        except TimeoutError:
-            pass
+        except socket.timeout:
+            print("Hi")
         except Exception as exc:
             logger.error(exc)
             break
@@ -89,11 +90,13 @@ while not shutdown:
             time.sleep(0.3)
 
     except KeyboardInterrupt:
+        s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
         shutdown = True
         receiveing_thread.join()
+        s.close()
         sys.exit()
-    except TimeoutError:
-        pass
+    except socket.timeout:
+        print("Hi")
     except Exception as exc:
         s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
         shutdown = True
