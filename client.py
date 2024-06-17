@@ -89,6 +89,8 @@ while not shutdown:
         except KeyboardInterrupt:
             shutdown = True
             sys.exit()
+        except TimeoutError:
+            pass
         except Exception as exc:
             shutdown = True
             logger.critical(exc)
