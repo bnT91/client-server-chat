@@ -53,7 +53,6 @@ def receive(name, sock):
         except KeyboardInterrupt:
             s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
             receiveing_thread.join()
-            time.sleep(0.2)
             s.close()
             sys.exit()
         except socket.timeout:
@@ -79,7 +78,6 @@ while not shutdown:
             if message.lower() in ["q", "quit"]:
                 s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
                 shutdown = True
-                time.sleep(0.2)
                 s.close()
                 receiveing_thread.join()
                 sys.exit()
@@ -97,6 +95,7 @@ while not shutdown:
     except KeyboardInterrupt:
         s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
         shutdown = True
+        s.close()
         receiveing_thread.join()
         sys.exit()
     except socket.timeout:
@@ -105,5 +104,6 @@ while not shutdown:
         s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
         shutdown = True
         logger.critical(exc)
+        s.close()
         receiveing_thread.join()
         sys.exit()
