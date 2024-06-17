@@ -74,6 +74,7 @@ while not shutdown:
 
             if message.lower() in ["q", "quit"]:
                 shutdown = True
+                receiveing_thread.join()
                 sys.exit()
 
             # # Encrypting message
