@@ -94,7 +94,6 @@ while not shutdown:
         print("here")
         shutdown = True
         receiveing_thread.join()
-        s.close()
         sys.exit()
     except socket.timeout:
         pass
