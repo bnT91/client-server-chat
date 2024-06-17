@@ -51,7 +51,8 @@ def receive(name, sock):
 
             time.sleep(0.3)
         except KeyboardInterrupt:
-            break
+            receiveing_thread.join()
+            sys.exit()
         except TimeoutError:
             pass
         except Exception as exc:
