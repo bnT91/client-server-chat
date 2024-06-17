@@ -2,8 +2,9 @@ import time
 import socket
 import threading
 import logging
+import sys
 
-key = 8194
+key = 3
 
 shutdown = False
 join = False
@@ -17,43 +18,48 @@ formatter = logging.Formatter("%(asctime)s %(levelname)s [%(name)s]: - %(message
 sh.setFormatter(formatter)
 logger.addHandler(sh)
 
-
-def receive(sock):
-    while True:
-        try:
-            data, addr = sock.recvfrom(1024)
-
-            # Decrypting message
-            decrypted_message = ""
-            now_decrypting = False
-
-            for sym in data.decode("utf-8"):
-                if sym == ":":
-                    now_decrypting = True
-                elif not now_decrypting or sym == " ":
-                    decrypted_message += sym
-                else:
-                    decrypted_message += chr(ord(sym)*key)
-            print(decrypted_message)
-
-            time.sleep(0.3)
-
-        except Exception as exc:
-            logger.error(exc)
-
-
 host = socket.gethostbyname(socket.gethostname())
 port = 0
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((host, port))
-s.setblocking(0)
+s.setblocking(True)
+s.settimeout(1)
 
 server_host = ("192.168.1.67", 7777)
 
+
+def receive(name, sock):
+    while True:
+        try:
+            data, addr = sock.recvfrom(1024, 3)
+
+            # # Decrypting message
+            # decrypted_message = ""
+            # now_decrypting = False
+            #
+            # for sym in data.decode("utf-8"):
+            #     if sym == ":":
+            #         now_decrypting = True
+            #     elif not now_decrypting or sym == " ":
+            #         decrypted_message += sym
+            #     else:
+            #         decrypted_message += chr(ord(sym)*key)
+            # print(decrypted_message)
+
+            print(data.decode("utf-8"))
+
+            time.sleep(0.3)
+        except KeyboardInterrupt:
+            break
+        except Exception as exc:
+            logger.error(exc)
+            break
+
+
 username = input("Your name: ")
 
-receiveing_thread = threading.Thread(target=receive, args=s)
+receiveing_thread = threading.Thread(target=receive, args=("RecvThread", s))
 receiveing_thread.start()
 
 while not shutdown:
@@ -63,20 +69,30 @@ while not shutdown:
     else:
         message = input()
 
-        # Encrypting message
-        encrypted_message = ""
-        for sym in message:
-            encrypted_message += chr(ord(sym)*key)
-        message = encrypted_message
+        if message.lower() in ["q", "quit"]:
+            shutdown = True
+            sys.exit()
+
+        # # Encrypting message
+        # encrypted_message = ""
+        # for sym in message:
+        #     encrypted_message += chr(ord(sym)*key)
+        # message = encrypted_message
 
         if message:
-            s.sendto(f"{username}: {message}", server_host)
+            s.sendto(f"{username}: {message}".encode("utf-8"), server_host)
 
         time.sleep(0.3)
 
         try:
             pass
+        except KeyboardInterrupt:
+            shutdown = True
+            sys.exit()
         except Exception as exc:
+            shutdown = True
             logger.critical(exc)
+            break
 
 receiveing_thread.join()
+sys.exit()

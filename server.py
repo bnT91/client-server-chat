@@ -1,6 +1,7 @@
 import socket
-import time
 import logging
+import sys
+import time
 
 logger = logging.getLogger("server_log")
 logger.setLevel(logging.DEBUG)
@@ -14,19 +15,18 @@ logger.addHandler(sh)
 host = socket.gethostbyname(socket.gethostname())
 port = 7777
 
-print(host)
+# print(host)
 
 clients = list()
 
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((host, port))
+s.settimeout(1)
 
 running = True
-time.sleep(1)
 logger.info("Server started")
-flag = False
 
-while running:
+while True:
     try:
         data, addr = s.recvfrom(1024)
         if addr not in clients:
@@ -38,15 +38,15 @@ while running:
         for client in clients:
             if client != addr:
                 s.sendto(data, client)
-        flag = False
 
+        time.sleep(0.2)
+    except KeyboardInterrupt:
+        s.close()
+        sys.exit()
+    except TimeoutError:
+        pass
     except Exception as exc:
-        if not flag:
-            logger.error(exc)
-        else:
-            logger.critical(exc)
-            logger.info("Server stopped due to critical error")
-            running = False
-        flag = True
+        logger.critical(exc)
+        logger.info("Server stopped due to critical error")
+        running = False
 
-s.close()
