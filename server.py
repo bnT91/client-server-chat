@@ -31,11 +31,10 @@ while True:
         if addr not in clients:
             clients.append(addr)
 
-        if data.decode("utf-8")[-2] == "":
-            print("that's true")
+        if data.decode("utf-8")[-2] == "e" and ":" not in data.decode("utf-8"):
             clients.remove(addr)
 
-        info = f"{addr[0]}:{addr[1]} | "
+        info = f"{addr[0]}-{addr[1]} | "
         print(f"{info}{data.decode("utf-8")}")
 
         for client in clients:

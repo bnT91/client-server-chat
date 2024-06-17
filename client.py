@@ -51,7 +51,7 @@ def receive(name, sock):
 
             time.sleep(0.2)
         except KeyboardInterrupt:
-            s.sendto(f"#{username} left chat. Goodbye!".encode("utf-8"), server_host)
+            s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
             receiveing_thread.join()
             time.sleep(0.2)
             s.close()
@@ -71,13 +71,13 @@ receiveing_thread.start()
 while not shutdown:
     try:
         if not join:
-            s.sendto(f"#{username} joined chat. Hello!".encode("utf-8"), server_host)
+            s.sendto(f"{username} joined chat. Hello!".encode("utf-8"), server_host)
             join = True
         else:
             message = input()
 
             if message.lower() in ["q", "quit"]:
-                s.sendto(f"#{username} left chat. Goodbye!".encode("utf-8"), server_host)
+                s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
                 shutdown = True
                 time.sleep(0.2)
                 s.close()
@@ -90,19 +90,19 @@ while not shutdown:
             #     encrypted_message += chr(ord(sym)*key)
             # message = encrypted_message
 
-            s.sendto(f"#{username}: {message}".encode("utf-8"), server_host)
+            s.sendto(f"{username}: {message}".encode("utf-8"), server_host)
 
             time.sleep(0.3)
 
     except KeyboardInterrupt:
-        s.sendto(f"#{username} left chat. Goodbye!".encode("utf-8"), server_host)
+        s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
         shutdown = True
         receiveing_thread.join()
         sys.exit()
     except socket.timeout:
         pass
     except Exception as exc:
-        s.sendto(f"#{username} left chat. Goodbye!".encode("utf-8"), server_host)
+        s.sendto(f"{username} left chat. Goodbye!".encode("utf-8"), server_host)
         shutdown = True
         logger.critical(exc)
         receiveing_thread.join()
