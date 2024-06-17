@@ -32,7 +32,7 @@ server_host = ("192.168.1.67", 7777)
 def receive(name, sock):
     while True:
         try:
-            data, addr = sock.recvfrom(1024, 3)
+            data, addr = sock.recvfrom(1024)
 
             # # Decrypting message
             # decrypted_message = ""
